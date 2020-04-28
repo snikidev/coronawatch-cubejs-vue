@@ -1,0 +1,1 @@
+# Coronawatch - CubeJS powered analytics

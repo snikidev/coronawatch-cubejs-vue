@@ -6,12 +6,8 @@ cube(`CovidCases`, {
       type: `count`,
       filters: [
         { sql: `${CUBE}.new_cases = 0` }
-      ],
-      rollingWindow: {
-        trailing: `unbounded`
-      },
+      ]
     },
-    
   },
   
   dimensions: {
