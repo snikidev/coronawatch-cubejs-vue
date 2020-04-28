@@ -5,13 +5,7 @@
         <span class="text-red-600">corona</span><span>watch</span>
       </h1>
       <Input :onSearch="onSearch" class="mt-8" />
-      <h3
-        class="text-2xl text-center mt-16 font-semibold text-gray-800"
-        v-show="country"
-      >
-        - {{ country }} -
-      </h3>
-      <chart-container class="mt-8" v-show="country" :country="country" />
+      <chart-container class="mt-16" v-show="country" :country="country" />
     </div>
   </div>
 </template>
@@ -28,13 +22,13 @@ export default {
   },
   data() {
     return {
-      country: "Russia",
+      country: "",
+      countryShown: false
     };
   },
   methods: {
     onSearch(country) {
       this.country = country;
-      console.log(country);
     },
   },
 };

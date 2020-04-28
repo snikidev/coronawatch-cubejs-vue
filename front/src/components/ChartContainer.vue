@@ -1,10 +1,17 @@
 <template>
   <div>
+    <h3
+      class="text-2xl text-center mb-8 font-semibold text-gray-800 capitalize"
+      v-show="country"
+    >
+      - {{ country }} -
+    </h3>
     <line-chart v-if="loaded" :chartdata="chartdata" :options="options" />
   </div>
 </template>
 
 <script>
+import { cubejsApi } from "../config";
 import LineChart from "./Chart.vue";
 
 export default {
@@ -15,45 +22,61 @@ export default {
   },
   data: () => ({
     loaded: false,
-    chartdata: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
-    },
+    chartdata: {},
     options: {
       maintainAspectRatio: false,
     },
   }),
-  async mounted() {
-    this.loaded = false;
-    try {
-      // TODO: fetch data with cubejs
-      // const { userlist } = await fetch("/api/country");
-      this.chartdata = {
-        ...this.chartdata,
-        datasets: [
-          {
-            label: "Cases",
-            data: [100, 200, 400, 456, 590, 678, 789, 1000],
-            borderColor: "#90CDF4",
-            fill: false,
-          },
-          {
-            label: "Deaths",
-            data: [10, 20, 40, 45, 59, 67, 78, 100],
-            borderColor: "#F56565",
-            fill: false,
-          },
-          {
-            label: "Recovered",
-            data: [0, 30, 50, 66, 57, 78, 89, 90],
-            borderColor: "#81E6D9",
-            fill: false,
-          },
-        ],
-      };
-      this.loaded = true;
-    } catch (e) {
-      console.error(e);
-    }
+  watch: {
+    async country() {
+      this.loaded = false;
+      try {
+        cubejsApi
+          .load({
+            measures: ["CovidCases.virusFreeDays"],
+            dimensions: [
+              "CovidCases.newCases",
+              "CovidCases.newDeaths",
+              "CovidCases.date",
+            ],
+            filters: [
+              {
+                dimension: "CovidCases.location",
+                operator: "contains",
+                values: [this.country],
+              },
+            ],
+            order: {
+              "CovidCases.date": "asc",
+            },
+          })
+          .then((result) => {
+            console.log(result)
+            const { data } = result.loadResponse;
+            this.chartdata = {
+              labels: data.map((item) => item["CovidCases.date"]),
+              datasets: [
+                {
+                  label: "Cases",
+                  data: data.map((item) => item["CovidCases.newCases"]),
+                  borderColor: "#90CDF4",
+                  fill: false,
+                },
+                {
+                  label: "Deaths",
+                  data: data.map((item) => item["CovidCases.newDeaths"]),
+                  borderColor: "#F56565",
+                  fill: false,
+                },
+              ],
+            };
+            this.loaded = true;
+          });
+      } catch (e) {
+        console.error(e);
+      }
+    },
   },
+  // async mounted() {},
 };
 </script>
