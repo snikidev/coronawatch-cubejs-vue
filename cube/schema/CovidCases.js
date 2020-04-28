@@ -2,10 +2,16 @@ cube(`CovidCases`, {
   sql: `SELECT * FROM public.covid_cases`,
   
   measures: {
-    count: {
+    virusFreeDays: {
       type: `count`,
-      drillMembers: [date]
-    }
+      filters: [
+        { sql: `${CUBE}.new_cases = 0` }
+      ],
+      rollingWindow: {
+        trailing: `unbounded`
+      },
+    },
+    
   },
   
   dimensions: {
@@ -14,59 +20,29 @@ cube(`CovidCases`, {
       type: `string`
     },
     
-    totalTestsPerThousand: {
-      sql: `total_tests_per_thousand`,
-      type: `string`
+    totalCases: {
+      sql: `total_cases`,
+      type: `number`
     },
     
-    newCasesPerMillion: {
-      sql: `new_cases_per_million`,
-      type: `string`
+    newCases: {
+      sql: `new_cases`,
+      type: `number`
     },
     
-    testsUnits: {
-      sql: `tests_units`,
-      type: `string`
+    totalDeaths: {
+      sql: `total_deaths`,
+      type: `number`
     },
     
-    isoCode: {
-      sql: `iso_code`,
-      type: `string`
-    },
-    
-    newDeathsPerMillion: {
-      sql: `new_deaths_per_million`,
-      type: `string`
-    },
-    
-    totalTests: {
-      sql: `total_tests`,
-      type: `string`
+    newDeaths: {
+      sql: `new_deaths`,
+      type: `number`
     },
     
     location: {
       sql: `location`,
       type: `string`
     },
-    
-    newTests: {
-      sql: `new_tests`,
-      type: `string`
-    },
-    
-    totalCasesPerMillion: {
-      sql: `total_cases_per_million`,
-      type: `string`
-    },
-    
-    totalDeathsPerMillion: {
-      sql: `total_deaths_per_million`,
-      type: `string`
-    },
-    
-    newTestsPerThousand: {
-      sql: `new_tests_per_thousand`,
-      type: `string`
-    }
   }
 });
