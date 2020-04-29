@@ -35,7 +35,4 @@ export default {
 </script>
 
 <style scoped>
-.behind {
-  top: 3xem;
-}
 </style>

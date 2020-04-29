@@ -23,7 +23,6 @@ export default {
   data() {
     return {
       country: "",
-      countryShown: false
     };
   },
   methods: {

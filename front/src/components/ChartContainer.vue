@@ -71,7 +71,7 @@ import Count from "./Count";
 import LineChart from "./LineChart";
 
 export default {
-  name: "LineChartContainer",
+  name: "ChartContainer",
   components: { Count, LineChart, QueryBuilder },
   props: {
     country: String,
