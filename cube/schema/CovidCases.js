@@ -8,6 +8,26 @@ cube(`CovidCases`, {
         { sql: `${CUBE}.new_cases = 0` }
       ]
     },
+
+    sumAllCases: {
+      type: `sum`,
+      sql: `new_cases`
+    },
+
+    sumAllDeaths: {
+      type: `sum`,
+      sql: `new_deaths`
+    },
+
+    ratioOfDeaths: {
+      type: `number`,
+      sql: `${sumAllDeaths} * 100.00 / ${sumAllCases}`,
+    },
+
+    avgCases: {
+      type: `avg`,
+      sql: `new_cases`,
+    }
   },
   
   dimensions: {

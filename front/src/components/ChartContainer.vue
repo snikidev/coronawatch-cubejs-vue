@@ -6,14 +6,59 @@
     >
       {{ country }}
     </h3>
-    <query-builder :cubejs-api="cubejsApi" :query="lineChartQuery">
+    <div
+      class="flex justify-center mb-8"
+      v-show="country"
+    >
+      <query-builder :cubejs-api="cubejsApi" :query="virusFreeDaysQuery">
+        <template v-slot="{ measures, resultSet, loading }">
+          <count
+            v-if="!loading"
+            :result-set="resultSet"
+            property="CovidCases.virusFreeDays"
+            title="Virus Free Days"
+          />
+        </template>
+      </query-builder>
+      <query-builder :cubejs-api="cubejsApi" :query="sumAllCases">
+        <template v-slot="{ measures, resultSet, loading }">
+          <count
+            v-if="!loading"
+            :result-set="resultSet"
+            property="CovidCases.sumAllCases"
+            title="Total Cases"
+          />
+        </template>
+      </query-builder>
+      <query-builder :cubejs-api="cubejsApi" :query="sumAllDeaths">
+        <template v-slot="{ measures, resultSet, loading }">
+          <count
+            v-if="!loading"
+            :result-set="resultSet"
+            property="CovidCases.sumAllDeaths"
+            title="Total Deaths"
+          />
+        </template>
+      </query-builder>
+      <query-builder :cubejs-api="cubejsApi" :query="ratioOfDeaths">
+        <template v-slot="{ measures, resultSet, loading }">
+          <count
+            v-if="!loading"
+            :result-set="resultSet"
+            property="CovidCases.ratioOfDeaths"
+            title="Ratio, %"
+            format
+          />
+        </template>
+      </query-builder>
+    </div>
+    <query-builder
+      v-show="lineChartQuery"
+      :cubejs-api="cubejsApi"
+      :query="lineChartQuery"
+    >
       <template v-slot="{ measures, resultSet, loading }">
         <line-chart v-if="!loading" :result-set="resultSet" />
-      </template>
-    </query-builder>
-    <query-builder :cubejs-api="cubejsApi" :query="virusFreeDaysQuery">
-      <template v-slot="{ measures, resultSet, loading }">
-        <count v-if="!loading" :result-set="resultSet" />
       </template>
     </query-builder>
   </div>
@@ -35,22 +80,27 @@ export default {
     cubejsApi,
     lineChartQuery: {},
     virusFreeDaysQuery: {},
+    sumAllCases: {},
+    sumAllDeaths: {},
+    ratioOfDeaths: {},
   }),
   watch: {
     async country() {
+      const filters = [
+        {
+          dimension: "CovidCases.location",
+          operator: "contains",
+          values: [this.country],
+        },
+      ];
+
       this.lineChartQuery = {
         dimensions: [
           "CovidCases.newCases",
           "CovidCases.newDeaths",
           "CovidCases.date",
         ],
-        filters: [
-          {
-            dimension: "CovidCases.location",
-            operator: "contains",
-            values: [this.country],
-          },
-        ],
+        filters,
         order: {
           "CovidCases.date": "asc",
         },
@@ -65,6 +115,21 @@ export default {
             values: [this.country],
           },
         ],
+      };
+
+      this.sumAllCases = {
+        measures: ["CovidCases.sumAllCases"],
+        filters,
+      };
+
+      this.sumAllDeaths = {
+        measures: ["CovidCases.sumAllDeaths"],
+        filters,
+      };
+
+      this.ratioOfDeaths = {
+        measures: ["CovidCases.ratioOfDeaths"],
+        filters,
       };
     },
   },
