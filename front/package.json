@@ -13,8 +13,7 @@
     "chart.js": "^2.9.3",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
-    "vue-chartjs": "^3.5.0",
-    "vue-loaders": "^3.3.1"
+    "vue-chartjs": "^3.5.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",
