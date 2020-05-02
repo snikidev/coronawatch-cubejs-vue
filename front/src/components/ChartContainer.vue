@@ -20,7 +20,7 @@
           />
         </template>
       </query-builder>
-      <query-builder :cubejs-api="cubejsApi" :query="sumAllCases">
+      <query-builder :cubejs-api="cubejsApi" :query="sumAllCasesQuery">
         <template v-slot="{ measures, resultSet, loading }">
           <count
             v-if="!loading"
@@ -30,7 +30,7 @@
           />
         </template>
       </query-builder>
-      <query-builder :cubejs-api="cubejsApi" :query="sumAllDeaths">
+      <query-builder :cubejs-api="cubejsApi" :query="sumAllDeathsQuery">
         <template v-slot="{ measures, resultSet, loading }">
           <count
             v-if="!loading"
@@ -40,7 +40,7 @@
           />
         </template>
       </query-builder>
-      <query-builder :cubejs-api="cubejsApi" :query="ratioOfDeaths">
+      <query-builder :cubejs-api="cubejsApi" :query="ratioOfDeathsQuery">
         <template v-slot="{ measures, resultSet, loading }">
           <count
             v-if="!loading"
@@ -80,9 +80,9 @@ export default {
     cubejsApi,
     lineChartQuery: {},
     virusFreeDaysQuery: {},
-    sumAllCases: {},
-    sumAllDeaths: {},
-    ratioOfDeaths: {},
+    sumAllCasesQuery: {},
+    sumAllDeathsQuery: {},
+    ratioOfDeathsQuery: {},
   }),
   watch: {
     async country() {
@@ -108,26 +108,20 @@ export default {
 
       this.virusFreeDaysQuery = {
         measures: ["CovidCases.virusFreeDays"],
-        filters: [
-          {
-            dimension: "CovidCases.location",
-            operator: "contains",
-            values: [this.country],
-          },
-        ],
+        filters,
       };
 
-      this.sumAllCases = {
+      this.sumAllCasesQuery = {
         measures: ["CovidCases.sumAllCases"],
         filters,
       };
 
-      this.sumAllDeaths = {
+      this.sumAllDeathsQuery = {
         measures: ["CovidCases.sumAllDeaths"],
         filters,
       };
 
-      this.ratioOfDeaths = {
+      this.ratioOfDeathsQuery = {
         measures: ["CovidCases.ratioOfDeaths"],
         filters,
       };
